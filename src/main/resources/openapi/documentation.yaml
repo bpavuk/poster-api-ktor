@@ -48,6 +48,15 @@ paths:
             'application/json':
               schema:
                 type: "string"
+        "401":
+          description: "Unauthorized"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid username or password"
   /json/kotlinx-serialization:
     get:
       description: ""
