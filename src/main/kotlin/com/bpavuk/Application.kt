@@ -1,5 +1,6 @@
 package com.bpavuk
 
+import com.bpavuk.dao.DatabaseFactory
 import com.bpavuk.plugins.configureHTTP
 import com.bpavuk.plugins.configureRouting
 import com.bpavuk.plugins.configureSecurity
@@ -11,6 +12,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
+    DatabaseFactory.init()
     configureHTTP()
     configureSecurity()
     configureSerialization()
