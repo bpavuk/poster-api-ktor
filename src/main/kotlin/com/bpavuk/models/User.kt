@@ -1,12 +1,15 @@
 package com.bpavuk.models
 
-import io.ktor.server.auth.*
-import kotlinx.serialization.Serializable
+data class User(
+    val username: String,
+    val profileImg: String,
+    val id: Int
+)
 
-@Serializable
-data class User(val username: String, val password: String): Principal
-
-val userStorage = mutableMapOf(
-    "hello" to User("hello", "itsMe"),
-    "bpavuk" to User("bpavuk", "bpavuk")
+val userStorage = mutableListOf(
+    User(
+        username = "bpavuk",
+        id = 0,
+        profileImg = "https://picsum.photos/200"
+    )
 )
