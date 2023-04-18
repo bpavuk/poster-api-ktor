@@ -39,7 +39,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserLoginForm"
         required: true
       responses:
         "200":
@@ -57,12 +57,47 @@ paths:
               examples:
                 Example#1:
                   value: "Invalid username or password"
+  /users/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User not found"
 components:
   schemas:
-    User:
+    UserLoginForm:
       type: "object"
       properties:
         username:
           type: "string"
         password:
           type: "string"
+    User:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        profileImg:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int32"
