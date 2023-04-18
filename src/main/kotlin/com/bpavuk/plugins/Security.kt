@@ -2,7 +2,7 @@ package com.bpavuk.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.bpavuk.models.userLoginFormStorage
+import com.bpavuk.dao.dao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -26,7 +26,8 @@ fun Application.configureSecurity() {
                     .build()
             )
             validate { jwtCredential ->
-                if (jwtCredential.payload.getClaim("username").asString() in userLoginFormStorage.keys) {
+                val username = jwtCredential.payload.getClaim("username").asString()
+                if ((dao.searchUser(username).singleOrNull()?.username ?: "") == username) {
                     JWTPrincipal(jwtCredential.payload)
                 } else {
                     null
