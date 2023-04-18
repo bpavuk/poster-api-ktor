@@ -19,8 +19,14 @@ class DAOFacadeImpl : DAOFacade {
         Users.selectAll().map(::resultRowToUser)
     }
 
-    override suspend fun addUser(user: UserRegisterForm) {
-        TODO("Not yet implemented")
+    override suspend fun addUser(user: UserRegisterForm): User? = dbQuery {
+        val insertStatement = Users.insert {
+            it[username] = user.username
+            it[password] = user.password
+            it[profileImg] = user.imageUrl
+        }
+
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUser)
     }
 
     override suspend fun getUser(id: Int): User? = dbQuery {
