@@ -2,9 +2,8 @@ package com.bpavuk.routing
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.bpavuk.dao.dao
 import com.bpavuk.models.UserLoginForm
-import com.bpavuk.models.userLoginFormStorage
-import com.bpavuk.models.userStorage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -19,8 +18,10 @@ fun Routing.loginRouting() {
 
     post("/login") {
         val userLoginForm = call.receive<UserLoginForm>()
-        val token = if (userLoginForm in userLoginFormStorage.values
-            && userStorage.find { it.username == userLoginForm.username } != null) {
+        val token = if (dao.loginUser(
+                username = userLoginForm.username,
+                password = userLoginForm.password
+            )) {
             JWT.create()
                 .withAudience(audience)
                 .withIssuer(issuer)
