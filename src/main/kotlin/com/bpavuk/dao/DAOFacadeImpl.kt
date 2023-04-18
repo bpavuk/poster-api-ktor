@@ -35,6 +35,15 @@ class DAOFacadeImpl : DAOFacade {
             .singleOrNull()
     }
 
+    override suspend fun loginUser(
+        username: String,
+        password: String
+    ): Boolean = dbQuery {
+        Users.select { (Users.username eq username) and (Users.password eq password) }
+            .map(::resultRowToUser)
+            .singleOrNull() != null
+    }
+
     override suspend fun searchUser(username: String): List<User> = dbQuery {
         Users.select { Users.username like "%$username%" }
             .map(::resultRowToUser)

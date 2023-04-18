@@ -10,4 +10,5 @@ interface DAOFacade {
     suspend fun searchUser(username: String): List<User>
     suspend fun editUserAvatar(id: Int, imgUrl: String): Boolean
     suspend fun deleteUser(id: Int): Boolean
+    suspend fun loginUser(username: String, password: String): Boolean
 }

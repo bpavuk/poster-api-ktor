@@ -27,6 +27,7 @@ object Users : Table() {
     val id = integer("id").autoIncrement()
     val username = varchar("username", 45)
     val profileImg = varchar("profile_img", 100)
+    val password = varchar("password", 50)
 
     override val primaryKey = PrimaryKey(id)
 }
