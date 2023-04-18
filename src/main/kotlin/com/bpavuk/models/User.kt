@@ -1,7 +1,9 @@
 package com.bpavuk.models
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 
+@Serializable
 data class User(
     val username: String,
     val profileImg: String,
