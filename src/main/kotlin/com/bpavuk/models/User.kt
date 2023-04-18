@@ -10,19 +10,6 @@ data class User(
     val id: Int
 )
 
-val userStorage = mutableListOf(
-    User(
-        username = "bpavuk",
-        id = 0,
-        profileImg = "https://picsum.photos/200"
-    ),
-    User(
-        username = "hello",
-        id = 1,
-        profileImg = "https://picsum.photos/200"
-    )
-)
-
 object Users : Table() {
     val id = integer("id").autoIncrement()
     val username = varchar("username", 45)
