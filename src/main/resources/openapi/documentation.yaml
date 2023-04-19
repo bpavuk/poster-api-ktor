@@ -69,6 +69,25 @@ paths:
               examples:
                 Example#1:
                   value: "User not found"
+  /users/me:
+    get:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: "Unauthorized"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Wrong token!"
   /users/register:
     post:
       description: ""
