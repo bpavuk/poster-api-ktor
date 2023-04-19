@@ -26,6 +26,12 @@ fun Routing.loginRouting() {
                 .withAudience(audience)
                 .withIssuer(issuer)
                 .withClaim("username", userLoginForm.username)
+                .withClaim(
+                    "id",
+                    dao.searchUser(userLoginForm.username)
+                        .singleOrNull { it.username == userLoginForm.username }
+                        ?.id
+                )
                 .withClaim("password", generateUtterTrash())
                 .withExpiresAt(Date(System.currentTimeMillis() + 60000))
                 .sign(Algorithm.HMAC256(secret))

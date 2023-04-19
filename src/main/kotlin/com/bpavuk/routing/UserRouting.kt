@@ -4,6 +4,8 @@ import com.bpavuk.dao.dao
 import com.bpavuk.models.UserRegisterForm
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -29,5 +31,14 @@ fun Routing.userRouting() {
             status = HttpStatusCode.NotAcceptable,
             "New user is not registered. Check your credentials"
         )
+    }
+    authenticate {
+        get("/users/me") {
+            val principal = call.principal<JWTPrincipal>()
+            val id = principal!!.payload.getClaim("id").asInt()
+
+            dao.getUser(id)?.let { call.respond(status = HttpStatusCode.Accepted, it) }
+                ?: call.respond(status = HttpStatusCode.Unauthorized, "Wrong token!")
+        }
     }
 }
