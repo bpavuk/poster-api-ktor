@@ -32,6 +32,10 @@ fun Routing.userRouting() {
             "New user is not registered. Check your credentials"
         )
     }
+    get("/users/search") {
+        val query = call.request.queryParameters.getOrFail("q")
+        call.respond(dao.searchUser(query))
+    }
     authenticate {
         get("/users/me") {
             val principal = call.principal<JWTPrincipal>()

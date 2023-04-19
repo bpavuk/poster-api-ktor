@@ -116,6 +116,24 @@ paths:
               examples:
                 Example#1:
                   value: "New user is not registered. Check your credentials"
+  /users/search:
+    get:
+      description: ""
+      parameters:
+      - name: "q"
+        in: "query"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
 components:
   schemas:
     UserLoginForm:
