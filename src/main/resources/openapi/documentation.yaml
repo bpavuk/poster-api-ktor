@@ -6,19 +6,6 @@ info:
 servers:
 - url: "http://127.0.0.1:8080"
 paths:
-  /:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
   /hello:
     get:
       description: ""
@@ -82,6 +69,34 @@ paths:
               examples:
                 Example#1:
                   value: "User not found"
+  /users/register:
+    post:
+      description: ""
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/UserRegisterForm"
+        required: true
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "New user is registered"
+        "406":
+          description: "Not Acceptable"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "New user is not registered. Check your credentials"
 components:
   schemas:
     UserLoginForm:
@@ -101,3 +116,12 @@ components:
         id:
           type: "integer"
           format: "int32"
+    UserRegisterForm:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        imageUrl:
+          type: "string"

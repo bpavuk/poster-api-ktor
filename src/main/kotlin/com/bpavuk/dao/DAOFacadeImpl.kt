@@ -20,13 +20,15 @@ class DAOFacadeImpl : DAOFacade {
     }
 
     override suspend fun addUser(user: UserRegisterForm): User? = dbQuery {
-        val insertStatement = Users.insert {
+        val insertStatement = if (searchUser(user.username).find {
+                it.username == user.username
+            } == null) Users.insert {
             it[username] = user.username
             it[password] = user.password
             it[profileImg] = user.imageUrl
-        }
+        } else null
 
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUser)
+        insertStatement?.resultedValues?.singleOrNull()?.let(::resultRowToUser)
     }
 
     override suspend fun getUser(id: Int): User? = dbQuery {
