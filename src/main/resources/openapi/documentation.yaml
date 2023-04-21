@@ -69,6 +69,25 @@ paths:
               examples:
                 Example#1:
                   value: "User not found"
+  /users/changeAvatar:
+    put:
+      description: ""
+      parameters:
+      - name: "img_url"
+        in: "query"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
   /users/me:
     get:
       description: ""

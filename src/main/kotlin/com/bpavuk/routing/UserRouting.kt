@@ -44,5 +44,16 @@ fun Routing.userRouting() {
             dao.getUser(id)?.let { call.respond(status = HttpStatusCode.Accepted, it) }
                 ?: call.respond(status = HttpStatusCode.Unauthorized, "Wrong token!")
         }
+        put("/users/changeAvatar") {
+            val principal = call.principal<JWTPrincipal>()
+            val id = principal!!.payload.getClaim("id").asInt()
+            var newAvatar = call.request.queryParameters.getOrFail("img_url")
+            if (newAvatar.startsWith("https://") || newAvatar.startsWith("http://")) {
+                newAvatar = newAvatar.split("://".toRegex())[1]
+            }
+
+            dao.editUserAvatar(id, "https://$newAvatar")
+            call.respond("Successful change of avatar, ${principal.payload.getClaim("username")}")
+        }
     }
 }
