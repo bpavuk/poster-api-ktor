@@ -44,6 +44,19 @@ fun Routing.userRouting() {
             dao.getUser(id)?.let { call.respond(status = HttpStatusCode.Accepted, it) }
                 ?: call.respond(status = HttpStatusCode.Unauthorized, "Wrong token!")
         }
+        delete("/users/me}") {
+            val principal = call.principal<JWTPrincipal>()
+            val id = principal!!.payload.getClaim("id").asInt()
+
+            if (dao.deleteUser(id)) {
+                call.respond(status = HttpStatusCode.Accepted, message = "Farewell, dear user")
+            } else {
+                call.respond(
+                    status = HttpStatusCode.InternalServerError,
+                    message = "Sorry, your deletion was unsuccessful due to problems at our side. Contact us and we'll try to resolve this problem"
+                )
+            }
+        }
         put("/users/changeAvatar") {
             val principal = call.principal<JWTPrincipal>()
             val id = principal!!.payload.getClaim("id").asInt()
