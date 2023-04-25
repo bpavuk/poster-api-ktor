@@ -1,10 +1,7 @@
 package com.bpavuk
 
 import com.bpavuk.dao.DatabaseFactory
-import com.bpavuk.plugins.configureHTTP
-import com.bpavuk.plugins.configureRouting
-import com.bpavuk.plugins.configureSecurity
-import com.bpavuk.plugins.configureSerialization
+import com.bpavuk.plugins.*
 import io.ktor.server.application.*
 
 fun main(args: Array<String>): Unit =
@@ -16,5 +13,7 @@ fun Application.module() {
     configureHTTP()
     configureSecurity()
     configureSerialization()
+    configurePartialContent()
+    configureAutoHeadResponse()
     configureRouting()
 }
