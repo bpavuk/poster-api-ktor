@@ -3,6 +3,7 @@ package com.bpavuk.routing
 import com.bpavuk.dao.dao
 import com.bpavuk.models.UserRegisterForm
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -10,6 +11,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import java.io.File
+import java.util.*
 
 fun Routing.userRouting() {
     get("/users/{id}") {
@@ -60,12 +63,24 @@ fun Routing.userRouting() {
         put("/users/changeAvatar") {
             val principal = call.principal<JWTPrincipal>()
             val id = principal!!.payload.getClaim("id").asInt()
-            var newAvatar = call.request.queryParameters.getOrFail("img_url")
-            if (newAvatar.startsWith("https://") || newAvatar.startsWith("http://")) {
-                newAvatar = newAvatar.split("://".toRegex())[1]
+            val multiPartData = call.receiveMultipart()
+            var fileName = ""
+            multiPartData.forEachPart { part ->
+                when (part) {
+                    is PartData.FileItem -> {
+                        fileName = UUID.randomUUID().toString()
+                        val fileBytes = part.streamProvider().readBytes()
+                        val file = File("./uploads/$id/$fileName.jpg")
+                        if (!file.parentFile.exists()) file.parentFile.mkdirs()
+                        file.createNewFile()
+                        file.writeBytes(fileBytes)
+                    }
+                    else -> {}
+                }
+                part.dispose()
             }
 
-            dao.editUserAvatar(id, "https://$newAvatar")
+            dao.editUserAvatar(id, "uploads/$id/$fileName")
             call.respond("Successful change of avatar, ${principal.payload.getClaim("username")}")
         }
     }
