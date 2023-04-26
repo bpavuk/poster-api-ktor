@@ -92,6 +92,13 @@ class DAOFacadeImpl : DAOFacade {
 
         return@dbQuery "Post successfully added"
     }
+
+    override suspend fun deletePost(id: Int): String = dbQuery {
+        val deletionResult = Posts.deleteWhere { Posts.id eq id }
+
+        if (deletionResult == 0) throw IllegalArgumentException(s = "No posts with ID $id deleted")
+        else return@dbQuery "Post #$id successfully deleted"
+    }
 }
 
 val dao: DAOFacade = DAOFacadeImpl().apply {
