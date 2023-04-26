@@ -71,6 +71,12 @@ class DAOFacadeImpl : DAOFacade {
             .map(::resultRowToPost)
             .singleOrNull() ?: throw IllegalArgumentException(s = "No posts with ID $id found")
     }
+
+    override suspend fun getPosts(start: Int, amount: Int): List<Post> = dbQuery {
+        Posts.select { Posts.id eq start }
+            .map(::resultRowToPost)
+            .subList(0, amount)
+    }
 }
 
 val dao: DAOFacade = DAOFacadeImpl().apply {
