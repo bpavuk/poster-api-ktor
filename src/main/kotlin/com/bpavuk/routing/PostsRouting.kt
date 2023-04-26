@@ -1,5 +1,6 @@
 package com.bpavuk.routing
 
+import com.bpavuk.dao.dao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -10,7 +11,9 @@ import java.io.File
 
 fun Route.postsRouting() {
     get("/posts/{post_id}") {
+        val postId = call.parameters.getOrFail("post_id").toInt()
 
+        call.respond(dao.getPost(id = postId))
     }
     get("/posts") {
 
