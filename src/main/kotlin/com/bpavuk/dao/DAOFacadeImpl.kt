@@ -24,7 +24,7 @@ class DAOFacadeImpl : DAOFacade {
         Users.selectAll().map(::resultRowToUser)
     }
 
-    override suspend fun addUser(user: UserRegisterForm): User? = dbQuery {
+    override suspend fun addUser(user: UserRegisterForm): User = dbQuery {
         val insertStatement = if (searchUser(user.username).find {
                 it.username == user.username
             } == null) Users.insert {
@@ -34,6 +34,7 @@ class DAOFacadeImpl : DAOFacade {
         } else null
 
         insertStatement?.resultedValues?.singleOrNull()?.let(::resultRowToUser)
+            ?: throw WrongCredentialsException("User with same username already exists")
     }
 
     override suspend fun getUser(id: Int): User? = dbQuery {
@@ -106,3 +107,5 @@ val dao: DAOFacade = DAOFacadeImpl().apply {
         }
     }
 }
+
+class WrongCredentialsException(message: String): Exception(message)
