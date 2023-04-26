@@ -77,6 +77,20 @@ class DAOFacadeImpl : DAOFacade {
             .map(::resultRowToPost)
             .subList(0, amount)
     }
+
+    override suspend fun newPost(
+        photos: List<String>,
+        postDescription: String,
+        userId: Int
+    ): String = dbQuery {
+        Posts.insert {
+            it[photosList] = photos.joinToString("\t")
+            it[authorId] = userId
+            it[description] = postDescription
+        }
+
+        return@dbQuery "Post successfully added"
+    }
 }
 
 val dao: DAOFacade = DAOFacadeImpl().apply {
