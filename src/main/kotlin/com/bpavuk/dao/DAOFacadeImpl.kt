@@ -5,6 +5,7 @@ import com.bpavuk.models.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import kotlin.math.min
 
 class DAOFacadeImpl : DAOFacade {
     private fun resultRowToUser(row: ResultRow) = User(
@@ -74,9 +75,10 @@ class DAOFacadeImpl : DAOFacade {
     }
 
     override suspend fun getPosts(start: Int, amount: Int): List<Post> = dbQuery {
-        Posts.select { Posts.id eq start }
+        val postsList = Posts.select { Posts.id eq start }
             .map(::resultRowToPost)
-            .subList(0, amount)
+
+        return@dbQuery postsList.subList(0, min(postsList.size, amount))
     }
 
     override suspend fun newPost(

@@ -21,7 +21,7 @@ fun Route.postsRouting() {
     }
     get("/posts") {
         val startId = call.request.queryParameters.getOrFail("start").toInt()
-        val amount = call.request.queryParameters.getOrFail("amount").toInt()
+        val amount = call.request.queryParameters["amount"]?.toInt() ?: 5
 
         call.respond(dao.getPosts(start = startId, amount = amount))
     }
@@ -54,7 +54,7 @@ fun Route.postsRouting() {
                     is PartData.FileItem -> {
                         val match = "(.*)\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
                         if (match.value == part.originalFileName) {
-                            val fileName = "${UUID.randomUUID()}.${match.groupValues[1]}"
+                            val fileName = "${UUID.randomUUID()}.${match.groupValues[2]}"
                             val fileBytes = part.streamProvider().readBytes()
                             val file = File("./uploads/$id/$fileName")
                             if (!file.parentFile.exists()) file.parentFile.mkdirs()
