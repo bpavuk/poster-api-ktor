@@ -14,4 +14,5 @@ interface DAOFacade {
     suspend fun loginUser(username: String, password: String): Boolean
     suspend fun getPost(id: Int): Post
     suspend fun getPosts(start: Int, amount: Int = 5): List<Post>
+    suspend fun newPost(photos: List<String>, postDescription: String, userId: Int): String
 }
