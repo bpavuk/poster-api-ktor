@@ -68,12 +68,19 @@ fun Routing.userRouting() {
             multiPartData.forEachPart { part ->
                 when (part) {
                     is PartData.FileItem -> {
-                        fileName = UUID.randomUUID().toString()
-                        val fileBytes = part.streamProvider().readBytes()
-                        val file = File("./uploads/$id/$fileName.jpg")
-                        if (!file.parentFile.exists()) file.parentFile.mkdirs()
-                        file.createNewFile()
-                        file.writeBytes(fileBytes)
+                        val match = ".*\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
+                        if (match.value == part.originalFileName) {
+                            fileName = UUID.randomUUID().toString()
+                            val fileBytes = part.streamProvider().readBytes()
+                            val file = File("./uploads/$id/$fileName.${match.groupValues[1]}")
+                            if (!file.parentFile.exists()) file.parentFile.mkdirs()
+                            file.createNewFile()
+                            file.writeBytes(fileBytes)
+                        } else {
+                            throw IllegalArgumentException(
+                                s = "Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed"
+                            )
+                        }
                     }
                     else -> {}
                 }
