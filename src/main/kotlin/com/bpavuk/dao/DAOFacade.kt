@@ -1,5 +1,6 @@
 package com.bpavuk.dao
 
+import com.bpavuk.models.Post
 import com.bpavuk.models.User
 import com.bpavuk.models.UserRegisterForm
 
@@ -11,4 +12,5 @@ interface DAOFacade {
     suspend fun editUserAvatar(id: Int, imgUrl: String): Boolean
     suspend fun deleteUser(id: Int): Boolean
     suspend fun loginUser(username: String, password: String): Boolean
+    suspend fun getPost(id: Int): Post
 }
