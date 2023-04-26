@@ -1,5 +1,6 @@
 package com.bpavuk.dao
 
+import com.bpavuk.models.Posts
 import com.bpavuk.models.Users
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
@@ -13,7 +14,7 @@ object DatabaseFactory {
         val jdbcUrl = "jdbc:h2:file:./build/db"
         val database = Database.connect(jdbcUrl, driverClassName)
         transaction(database) {
-            SchemaUtils.create(Users)
+            SchemaUtils.create(Users, Posts)
         }
     }
 
