@@ -1,9 +1,7 @@
 package com.bpavuk.dao
 
 import com.bpavuk.dao.DatabaseFactory.dbQuery
-import com.bpavuk.models.User
-import com.bpavuk.models.UserRegisterForm
-import com.bpavuk.models.Users
+import com.bpavuk.models.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -13,6 +11,13 @@ class DAOFacadeImpl : DAOFacade {
         id = row[Users.id],
         username = row[Users.username],
         profileImg = row[Users.profileImg],
+    )
+
+    private fun resultRowToPost(row: ResultRow) = Post(
+        id = row[Posts.id],
+        photosList = row[Posts.photosList].split("\t"),
+        description = row[Posts.description],
+        authorId = row[Posts.authorId]
     )
 
     override suspend fun allUsers(): List<User> = dbQuery {
