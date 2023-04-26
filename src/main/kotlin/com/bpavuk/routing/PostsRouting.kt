@@ -80,7 +80,9 @@ fun Route.postsRouting() {
             call.respond(dao.newPost(photos = photosList, postDescription = description, userId = id))
         }
         delete("/posts/{post_id}") {
+            val postId = call.parameters.getOrFail("post_id").toInt()
 
+            call.respond(dao.deletePost(id = postId))
         }
     }
 }
