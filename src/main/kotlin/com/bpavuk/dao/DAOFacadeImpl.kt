@@ -70,7 +70,7 @@ class DAOFacadeImpl : DAOFacade {
     override suspend fun getPost(id: Int): Post = dbQuery {
         Posts.select { Posts.id eq id }
             .map(::resultRowToPost)
-            .singleOrNull() ?: throw IllegalArgumentException(s = "No posts with ID $id found")
+            .singleOrNull() ?: throw IllegalArgumentException("No posts with ID $id found")
     }
 
     override suspend fun getPosts(start: Int, amount: Int): List<Post> = dbQuery {
@@ -96,7 +96,7 @@ class DAOFacadeImpl : DAOFacade {
     override suspend fun deletePost(id: Int): String = dbQuery {
         val deletionResult = Posts.deleteWhere { Posts.id eq id }
 
-        if (deletionResult == 0) throw IllegalArgumentException(s = "No posts with ID $id deleted")
+        if (deletionResult == 0) throw IllegalArgumentException("No posts with ID $id deleted")
         else return@dbQuery "Post #$id successfully deleted"
     }
 }

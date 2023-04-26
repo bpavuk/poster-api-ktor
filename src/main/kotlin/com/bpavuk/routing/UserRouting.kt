@@ -77,9 +77,7 @@ fun Routing.userRouting() {
                             file.createNewFile()
                             file.writeBytes(fileBytes)
                         } else {
-                            throw IllegalArgumentException(
-                                s = "Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed"
-                            )
+                            throw IllegalArgumentException("Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed")
                         }
                     }
                     else -> {}

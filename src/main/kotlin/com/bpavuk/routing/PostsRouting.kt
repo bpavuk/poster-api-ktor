@@ -62,16 +62,14 @@ fun Route.postsRouting() {
                             file.writeBytes(fileBytes)
                             photosList.add(fileName)
                         } else {
-                            throw IllegalArgumentException(
-                                s = "Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed"
-                            )
+                            throw IllegalArgumentException("Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed")
                         }
                     }
                     is PartData.FormItem -> {
                         description = part.value
                     }
                     else -> {
-                        throw IllegalArgumentException(s = "Unexpected element")
+                        throw IllegalArgumentException("Unexpected element")
                     }
                 }
                 part.dispose()
