@@ -51,12 +51,6 @@ class DAOFacadeImpl : DAOFacade {
             .singleOrNull() != null
     }
 
-    override suspend fun getPost(id: Int): Post = dbQuery {
-        Posts.select { Posts.id eq id }
-            .map(::resultRowToPost)
-            .singleOrNull() ?: throw IllegalArgumentException(s = "No posts with ID $id found")
-    }
-
     override suspend fun searchUser(username: String): List<User> = dbQuery {
         Users.select { Users.username like "%$username%" }
             .map(::resultRowToUser)
@@ -70,6 +64,12 @@ class DAOFacadeImpl : DAOFacade {
 
     override suspend fun deleteUser(id: Int): Boolean = dbQuery {
         Users.deleteWhere { Users.id eq id } > 0
+    }
+
+    override suspend fun getPost(id: Int): Post = dbQuery {
+        Posts.select { Posts.id eq id }
+            .map(::resultRowToPost)
+            .singleOrNull() ?: throw IllegalArgumentException(s = "No posts with ID $id found")
     }
 }
 
