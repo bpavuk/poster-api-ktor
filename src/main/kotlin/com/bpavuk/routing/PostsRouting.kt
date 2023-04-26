@@ -16,7 +16,10 @@ fun Route.postsRouting() {
         call.respond(dao.getPost(id = postId))
     }
     get("/posts") {
+        val startId = call.request.queryParameters.getOrFail("start").toInt()
+        val amount = call.request.queryParameters.getOrFail("amount").toInt()
 
+        call.respond(dao.getPosts(start = startId, amount = amount))
     }
     get("/uploads/{user_id}/{file_name}") {
         val userId = call.parameters.getOrFail("user_id").toInt()
