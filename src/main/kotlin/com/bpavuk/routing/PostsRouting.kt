@@ -1,6 +1,6 @@
 package com.bpavuk.routing
 
-import com.bpavuk.dao.dao
+import com.bpavuk.data.PostRepository
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -10,20 +10,23 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import org.koin.ktor.ext.inject
 import java.io.File
 import java.util.*
 
 fun Route.postsRouting() {
+    val postRepository: PostRepository by inject()
+
     get("/posts/{post_id}") {
         val postId = call.parameters.getOrFail("post_id").toInt()
 
-        call.respond(dao.getPost(id = postId))
+        call.respond(postRepository.getPost(id = postId))
     }
     get("/posts") {
         val startId = call.request.queryParameters.getOrFail("start").toInt()
         val amount = call.request.queryParameters["amount"]?.toInt() ?: 5
 
-        call.respond(dao.getPosts(start = startId, amount = amount))
+        call.respond(postRepository.getPosts(start = startId, amount = amount))
     }
     get("/uploads/{user_id}/{file_name}") {
         val userId = call.parameters.getOrFail("user_id").toInt()
@@ -78,12 +81,12 @@ fun Route.postsRouting() {
                 part.dispose()
             }
 
-            call.respond(dao.newPost(photos = photosList, postDescription = description, userId = id))
+            call.respond(postRepository.newPost(photos = photosList, postDescription = description, userId = id))
         }
         delete("/posts/{post_id}") {
             val postId = call.parameters.getOrFail("post_id").toInt()
 
-            call.respond(dao.deletePost(id = postId))
+            call.respond(postRepository.deletePost(id = postId))
         }
     }
 }
