@@ -52,7 +52,8 @@ fun Route.postsRouting() {
             postMultipart.forEachPart { part ->
                 when (part) {
                     is PartData.FileItem -> {
-                        val match = "(.*)\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
+                        val match =
+                            "(.*)\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
                         if (match.value == part.originalFileName) {
                             val fileName = "${UUID.randomUUID()}.${match.groupValues[2]}"
                             val fileBytes = part.streamProvider().readBytes()
@@ -65,9 +66,11 @@ fun Route.postsRouting() {
                             throw IllegalArgumentException("Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed")
                         }
                     }
+
                     is PartData.FormItem -> {
                         description = part.value
                     }
+
                     else -> {
                         throw IllegalArgumentException("Unexpected element")
                     }

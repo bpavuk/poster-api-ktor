@@ -68,7 +68,8 @@ fun Routing.userRouting() {
             multiPartData.forEachPart { part ->
                 when (part) {
                     is PartData.FileItem -> {
-                        val match = ".*\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
+                        val match =
+                            ".*\\.(jpg|jpeg|png|gif)".toRegex().matchEntire(part.originalFileName!!) as MatchResult
                         if (match.value == part.originalFileName) {
                             fileName = UUID.randomUUID().toString()
                             val fileBytes = part.streamProvider().readBytes()
@@ -80,6 +81,7 @@ fun Routing.userRouting() {
                             throw IllegalArgumentException("Wrong file extensions! Only .jpg, .jpeg, .png and .gif are allowed")
                         }
                     }
+
                     else -> {}
                 }
                 part.dispose()

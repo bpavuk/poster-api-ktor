@@ -21,7 +21,8 @@ fun Routing.loginRouting() {
         val token = if (dao.loginUser(
                 username = userLoginForm.username,
                 password = userLoginForm.password
-            )) {
+            )
+        ) {
             JWT.create()
                 .withAudience(audience)
                 .withIssuer(issuer)
