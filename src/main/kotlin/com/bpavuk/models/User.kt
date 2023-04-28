@@ -10,6 +10,17 @@ data class User(
     val id: Int
 )
 
+@Serializable
+data class UserLoginForm(val username: String, val password: String)
+
+@Serializable
+data class UserRegisterForm(
+    val username: String,
+    val password: String,
+    val imageUrl: String
+)
+
+
 object Users : Table() {
     val id = integer("id").autoIncrement()
     val username = varchar("username", 45)
