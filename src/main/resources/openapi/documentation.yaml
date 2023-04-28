@@ -44,6 +44,101 @@ paths:
               examples:
                 Example#1:
                   value: "Invalid username or password"
+  /posts:
+    get:
+      description: ""
+      parameters:
+      - name: "start"
+        in: "query"
+        required: true
+        schema:
+          type: "integer"
+      - name: "amount"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Post"
+  /posts/{post_id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "post_id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+    get:
+      description: ""
+      parameters:
+      - name: "post_id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Post"
+  /posts/new:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+  /uploads/{user_id}/{file_name}:
+    get:
+      description: ""
+      parameters:
+      - name: "user_id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      - name: "file_name"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "File not found :p"
+        "200":
+          description: "OK <br> A file response"
+          content:
+            application/*:
+              schema:
+                type: "object"
+                format: "binary"
   /users/{id}:
     get:
       description: ""
@@ -63,7 +158,7 @@ paths:
         "404":
           description: "Not Found"
           content:
-            '*/*':
+            'text/plain':
               schema:
                 type: "string"
               examples:
@@ -72,12 +167,6 @@ paths:
   /users/changeAvatar:
     put:
       description: ""
-      parameters:
-      - name: "img_url"
-        in: "query"
-        required: true
-        schema:
-          type: "string"
       responses:
         "200":
           description: "OK"
@@ -107,6 +196,28 @@ paths:
               examples:
                 Example#1:
                   value: "Wrong token!"
+    delete:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Farewell, dear user"
+        "500":
+          description: "Internal Server Error"
+          content:
+            'text/plain':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Sorry, your deletion was unsuccessful due to problems at\
+                    \ our side. Contact us and we'll try to resolve this problem"
   /users/register:
     post:
       description: ""
@@ -162,6 +273,21 @@ components:
           type: "string"
         password:
           type: "string"
+    Post:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        description:
+          type: "string"
+        photosList:
+          type: "array"
+          items:
+            type: "string"
+        authorId:
+          type: "integer"
+          format: "int32"
     User:
       type: "object"
       properties:
