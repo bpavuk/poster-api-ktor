@@ -1,6 +1,6 @@
 package com.bpavuk.dao
 
-import com.bpavuk.dao.DatabaseFactory.dbQuery
+import com.bpavuk.di.DatabaseFactory.dbQuery
 import com.bpavuk.models.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*

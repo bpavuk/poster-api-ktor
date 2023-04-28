@@ -1,4 +1,4 @@
-package com.bpavuk.dao
+package com.bpavuk.di
 
 import com.bpavuk.models.Posts
 import com.bpavuk.models.Users

@@ -1,6 +1,6 @@
 package com.bpavuk
 
-import com.bpavuk.dao.DatabaseFactory
+import com.bpavuk.di.DatabaseFactory
 import com.bpavuk.plugins.*
 import io.ktor.server.application.*
 
