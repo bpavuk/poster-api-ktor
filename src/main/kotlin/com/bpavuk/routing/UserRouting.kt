@@ -47,7 +47,7 @@ fun Routing.userRouting() {
             dao.getUser(id)?.let { call.respond(status = HttpStatusCode.Accepted, it) }
                 ?: call.respond(status = HttpStatusCode.Unauthorized, "Wrong token!")
         }
-        delete("/users/me}") {
+        delete("/users/me") {
             val principal = call.principal<JWTPrincipal>()
             val id = principal!!.payload.getClaim("id").asInt()
 
