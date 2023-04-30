@@ -2,18 +2,20 @@ package com.bpavuk.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.bpavuk.dao.dao
+import com.bpavuk.data.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import org.koin.ktor.ext.inject
 
 fun Application.configureSecurity() {
     val myRealm = environment.config.property("jwt.realm").getString()
     val secret = environment.config.property("jwt.secret").getString()
     val issuer = environment.config.property("jwt.issuer").getString()
     val audience = environment.config.property("jwt.audience").getString()
+    val userRepository: UserRepository by inject()
 
     install(Authentication) {
         jwt {
@@ -27,7 +29,7 @@ fun Application.configureSecurity() {
             )
             validate { jwtCredential ->
                 val username = jwtCredential.payload.getClaim("username").asString()
-                if ((dao.searchUser(username).singleOrNull()?.username ?: "") == username) {
+                if ((userRepository.searchUser(username).singleOrNull()?.username ?: "") == username) {
                     JWTPrincipal(jwtCredential.payload)
                 } else {
                     null

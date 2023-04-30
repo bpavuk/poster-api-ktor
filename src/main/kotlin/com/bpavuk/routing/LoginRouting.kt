@@ -2,33 +2,36 @@ package com.bpavuk.routing
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.bpavuk.dao.dao
+import com.bpavuk.data.UserRepository
 import com.bpavuk.models.UserLoginForm
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 import java.util.*
 
 fun Routing.loginRouting() {
     val secret = environment!!.config.property("jwt.secret").getString()
     val issuer = environment!!.config.property("jwt.issuer").getString()
     val audience = environment!!.config.property("jwt.audience").getString()
+    val userRepository: UserRepository by inject()
 
     post("/login") {
         val userLoginForm = call.receive<UserLoginForm>()
-        val token = if (dao.loginUser(
+        val token = if (userRepository.loginUser(
                 username = userLoginForm.username,
                 password = userLoginForm.password
-            )) {
+            )
+        ) {
             JWT.create()
                 .withAudience(audience)
                 .withIssuer(issuer)
                 .withClaim("username", userLoginForm.username)
                 .withClaim(
                     "id",
-                    dao.searchUser(userLoginForm.username)
+                    userRepository.searchUser(userLoginForm.username)
                         .singleOrNull { it.username == userLoginForm.username }
                         ?.id
                 )
