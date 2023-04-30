@@ -10,6 +10,7 @@ object Posts : Table() {
     val photosList = text("photos_list")
     val authorId = reference("author", Users.id)
     val rating = integer("rating").default(0)
+    val fakedBy = text("faked_by").default("")
 
     override val primaryKey = PrimaryKey(id)
 }
