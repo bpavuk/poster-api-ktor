@@ -16,4 +16,11 @@ object Posts : Table() {
 }
 
 @Serializable
-data class Post(val id: Int, val description: String, val photosList: List<String>, val authorId: Int, val rating: Int)
+data class Post(
+    val id: Int,
+    val description: String,
+    val photosList: List<String>,
+    val authorId: Int,
+    val rating: Int,
+    val fakedBy: List<String>
+)

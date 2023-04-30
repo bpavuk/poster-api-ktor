@@ -23,7 +23,8 @@ class PostRepositoryImpl : PostRepository {
         photosList = row[Posts.photosList].split("\t"),
         description = row[Posts.description],
         authorId = row[Posts.authorId],
-        rating = row[Posts.rating]
+        rating = row[Posts.rating],
+        fakedBy = row[Posts.fakedBy].split("\t")
     )
     override suspend fun getPost(id: Int): Post = dbQuery {
         Posts.select { Posts.id eq id }
