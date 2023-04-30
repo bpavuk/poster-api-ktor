@@ -9,9 +9,10 @@ object Posts : Table() {
     val description = varchar(name = "description", length = 1000)
     val photosList = text("photos_list")
     val authorId = reference("author", Users.id)
+    val rating = integer("rating").default(0)
 
     override val primaryKey = PrimaryKey(id)
 }
 
 @Serializable
-data class Post(val id: Int, val description: String, val photosList: List<String>, val authorId: Int)
+data class Post(val id: Int, val description: String, val photosList: List<String>, val authorId: Int, val rating: Int)
