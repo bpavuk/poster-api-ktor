@@ -94,5 +94,11 @@ fun Route.postsRouting() {
 
             call.respond(postRepository.fakeThePost(postId, userId))
         }
+        post("/posts/{post_id}/real") {
+            val postId = call.parameters.getOrFail("post_id").toInt()
+            val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("id").asInt()
+
+            call.respond(postRepository.realThePost(postId, userId))
+        }
     }
 }
