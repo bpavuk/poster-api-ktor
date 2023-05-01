@@ -3,11 +3,8 @@ package com.bpavuk.data
 import com.bpavuk.di.DatabaseFactory.dbQuery
 import com.bpavuk.models.Post
 import com.bpavuk.models.Posts
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import kotlin.math.min
 
 interface PostRepository {
@@ -59,5 +56,27 @@ class PostRepositoryImpl : PostRepository {
 
         if (deletionResult == 0) throw IllegalArgumentException("No posts with ID $id deleted")
         else return@dbQuery "Post #$id successfully deleted"
+    }
+
+    override suspend fun fakeThePost(postId: Int, userId: Int): String = dbQuery {
+        Posts.update(where = { Posts.id eq postId }) {
+            // post to operate with
+            val post = Posts.select(id eq postId)
+                .map(::resultRowToPost)
+                .singleOrNull() ?: throw IllegalArgumentException("Post with ID $postId not found")
+            if (
+                // if user already faked this post before
+                post.fakedBy.contains("$userId")
+            ) {
+                // down-rate it and delete user's ID from TSV representing a list of users
+                it[rating] = post.rating - 1
+                it[fakedBy] = post.fakedBy.filter { id -> id != userId.toString() }.joinToString("\t")
+            } else {
+                // uprate it and insert user's ID into TSV representing a list of users
+                it[rating] = post.rating + 1
+                it[fakedBy] = (mutableListOf<String>() + post.fakedBy + "$userId").joinToString("\t")
+            }
+        }
+        return@dbQuery "Post #$postId is faked by user #$userId"
     }
 }
