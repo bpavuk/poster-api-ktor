@@ -88,5 +88,11 @@ fun Route.postsRouting() {
 
             call.respond(postRepository.deletePost(id = postId))
         }
+        post("/posts/{post_id}/fake") {
+            val postId = call.parameters.getOrFail("post_id").toInt()
+            val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("id").asInt()
+
+            call.respond(postRepository.fakeThePost(postId, userId))
+        }
     }
 }
