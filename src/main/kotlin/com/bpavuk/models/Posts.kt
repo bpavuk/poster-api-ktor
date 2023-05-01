@@ -22,7 +22,7 @@ data class Post(
     val description: String,
     val photosList: List<String>,
     val authorId: Int,
-    val rating: Int,
+    var rating: Int,
     val fakedBy: List<String>,
     val realedBy: List<String>
 )
