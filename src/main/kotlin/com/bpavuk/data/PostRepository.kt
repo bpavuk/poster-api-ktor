@@ -80,4 +80,25 @@ class PostRepositoryImpl : PostRepository {
         }
         return@dbQuery "Post #$postId is faked by user #$userId"
     }
+
+    override suspend fun realThePost(postId: Int, userId: Int): String = dbQuery {
+        Posts.update(where = { Posts.id eq postId }) {
+            // post to operate with
+            val post = Posts.select(id eq postId)
+                .map(::resultRowToPost)
+                .singleOrNull() ?: throw IllegalArgumentException("Post with ID $postId not found")
+
+            if (post.fakedBy.contains("$userId")) {
+                it[rating] = --post.rating
+                it[fakedBy] = post.fakedBy.filter { id -> id != userId.toString() }.joinToString("\t")
+            } else if (post.realedBy.contains("$userId")) {
+                it[rating] = ++post.rating
+                it[realedBy] = post.realedBy.filter { id -> id != userId.toString() }.joinToString("\t")
+                return@update
+            }
+            it[rating] = --post.rating
+            it[realedBy] = (mutableListOf<String>() + post.realedBy + "$userId").joinToString("\t")
+        }
+        return@dbQuery "Post #$postId is realed by user #$userId"
+    }
 }
