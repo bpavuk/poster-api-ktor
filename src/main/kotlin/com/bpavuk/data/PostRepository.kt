@@ -11,7 +11,7 @@ interface PostRepository {
     suspend fun getPost(id: Int): Post
     suspend fun getPosts(start: Int, amount: Int = 5): List<Post>
     suspend fun newPost(photos: List<String>, postDescription: String, userId: Int): String
-    suspend fun deletePost(id: Int): String
+    suspend fun deletePost(id: Int, userId: Int): String
     suspend fun fakeThePost(postId: Int, userId: Int): String
     suspend fun realThePost(postId: Int, userId: Int): String
 }
@@ -53,8 +53,8 @@ class PostRepositoryImpl : PostRepository {
         return@dbQuery "Post successfully added"
     }
 
-    override suspend fun deletePost(id: Int): String = dbQuery {
-        val deletionResult = Posts.deleteWhere { Posts.id eq id }
+    override suspend fun deletePost(id: Int, userId: Int): String = dbQuery {
+        val deletionResult = Posts.deleteWhere { (Posts.id eq id) and (authorId eq userId) }
 
         if (deletionResult == 0) throw IllegalArgumentException("No posts with ID $id deleted")
         else return@dbQuery "Post #$id successfully deleted"

@@ -85,8 +85,9 @@ fun Route.postsRouting() {
         }
         delete("/posts/{post_id}") {
             val postId = call.parameters.getOrFail("post_id").toInt()
+            val userId = call.parameters.getOrFail("post_id").toInt()
 
-            call.respond(postRepository.deletePost(id = postId))
+            call.respond(postRepository.deletePost(id = postId, userId = userId))
         }
         post("/posts/{post_id}/fake") {
             val postId = call.parameters.getOrFail("post_id").toInt()
