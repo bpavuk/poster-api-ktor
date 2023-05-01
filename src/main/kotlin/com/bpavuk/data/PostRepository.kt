@@ -13,6 +13,7 @@ interface PostRepository {
     suspend fun newPost(photos: List<String>, postDescription: String, userId: Int): String
     suspend fun deletePost(id: Int): String
     suspend fun fakeThePost(postId: Int, userId: Int): String
+    suspend fun realThePost(postId: Int, userId: Int): String
 }
 
 class PostRepositoryImpl : PostRepository {
