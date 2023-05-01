@@ -66,18 +66,17 @@ class PostRepositoryImpl : PostRepository {
             val post = Posts.select(id eq postId)
                 .map(::resultRowToPost)
                 .singleOrNull() ?: throw IllegalArgumentException("Post with ID $postId not found")
-            if (
-                // if user already faked this post before
-                post.fakedBy.contains("$userId")
-            ) {
-                // down-rate it and delete user's ID from TSV representing a list of users
-                it[rating] = post.rating - 1
+
+            if (post.realedBy.contains("$userId")) {
+                it[rating] = ++post.rating
+                it[realedBy] = post.realedBy.filter { id -> id != userId.toString() }.joinToString("\t")
+            } else if (post.fakedBy.contains("$userId")) {
+                it[rating] = --post.rating
                 it[fakedBy] = post.fakedBy.filter { id -> id != userId.toString() }.joinToString("\t")
-            } else {
-                // uprate it and insert user's ID into TSV representing a list of users
-                it[rating] = post.rating + 1
-                it[fakedBy] = (mutableListOf<String>() + post.fakedBy + "$userId").joinToString("\t")
+                return@update
             }
+            it[rating] = ++post.rating
+            it[fakedBy] = (mutableListOf<String>() + post.fakedBy + "$userId").joinToString("\t")
         }
         return@dbQuery "Post #$postId is faked by user #$userId"
     }
